@@ -591,7 +591,7 @@ public class CacheManager extends JsonCallHandler
     }
 
     CacheActivator.reschedule(queue);
-    CacheActivator.rescheduleBackup();
+//  CacheActivator.rescheduleBackup();
   }
 
 

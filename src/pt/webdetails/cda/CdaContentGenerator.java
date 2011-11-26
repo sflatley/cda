@@ -22,9 +22,12 @@ import org.pentaho.platform.api.engine.IMimeTypeListener;
 import org.pentaho.platform.api.engine.IParameterProvider;
 import org.pentaho.platform.api.repository.IContentItem;
 import org.pentaho.platform.api.repository.ISolutionRepository;
+import org.pentaho.platform.api.repository2.unified.IUnifiedRepository;
+import org.pentaho.platform.api.repository2.unified.RepositoryFile;
 import org.pentaho.platform.engine.core.solution.ActionInfo;
 import org.pentaho.platform.engine.core.system.PentahoSystem;
 import org.pentaho.platform.engine.services.solution.BaseContentGenerator;
+import org.pentaho.platform.repository2.unified.fileio.RepositoryFileInputStream;
 import org.pentaho.platform.util.messages.LocaleHelper;
 import org.apache.commons.lang.StringUtils;
 
@@ -102,7 +105,7 @@ public class CdaContentGenerator extends BaseContentGenerator
         HashMap<String, Object> iface = (HashMap<String, Object>) callbacks.get(0);
         pathParams = parameterProviders.get("path");
         requestParams = parameterProviders.get("request");
-        contentItem = outputHandler.getOutputContentItem("response", "content", "", instanceId, MIME_HTML);
+        contentItem = outputHandler.getOutputContentItem("response", "content", instanceId, MIME_HTML);
         out = (OutputStream) iface.get("output");
         method = (String) iface.get("method");
       }
@@ -110,7 +113,7 @@ public class CdaContentGenerator extends BaseContentGenerator
       { // if not, we handle the request normally
         pathParams = parameterProviders.get("path");
         requestParams = parameterProviders.get("request");
-        contentItem = outputHandler.getOutputContentItem("response", "content", "", instanceId, MIME_HTML);
+        contentItem = outputHandler.getOutputContentItem("response", "content", instanceId, MIME_HTML);
         out = contentItem.getOutputStream(null);
         pathString = pathParams.getStringParameter("path", null);
         method = extractMethod(pathString);
@@ -455,15 +458,17 @@ public class CdaContentGenerator extends BaseContentGenerator
   public String getResourceAsString(final String path, final HashMap<String, String> tokens) throws IOException
   {
     // Read file
-    ISolutionRepository solutionRepository = PentahoSystem.get(ISolutionRepository.class, userSession);
-    
+    IUnifiedRepository unifiedRepository = PentahoSystem.get(IUnifiedRepository.class);
+    RepositoryFile repositoryFile = unifiedRepository.getFile(path);
+
     String resourceContents = StringUtils.EMPTY;
-    if (solutionRepository.resourceExists(path))
+    if (repositoryFile != null)
     {
       InputStream in = null;
       try
       {
-        in = solutionRepository.getResourceInputStream(path, true, ISolutionRepository.ACTION_EXECUTE);
+        //in = solutionRepository.getResourceInputStream(path, true, ISolutionRepository.ACTION_EXECUTE);
+        in = new RepositoryFileInputStream(path);
         resourceContents = IOUtils.toString(in);
       }
       finally 
@@ -488,9 +493,11 @@ public class CdaContentGenerator extends BaseContentGenerator
   {
 
     ISolutionRepository solutionRepository = PentahoSystem.get(ISolutionRepository.class, userSession);
+    IUnifiedRepository unifiedRepository = PentahoSystem.get(IUnifiedRepository.class);
+    RepositoryFile repositoryFile = unifiedRepository.getFile(path);
 
     // Check if the file exists and we have permissions to write to it
-    if (solutionRepository.getSolutionFile(path, actionOperation) != null)
+    if (repositoryFile != null)
     {
       // Fill key map with locale definition
       HashMap<String, String> keys = new HashMap();

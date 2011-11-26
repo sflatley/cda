@@ -41,9 +41,9 @@ public class CdaFileMetaProvider extends SolutionFileMetaAdapter {
       info.setTitle(title);
       return info;
     } catch (Exception e) {
-      if (logger != null) {
+      /*if (logger != null) {
         logger.error(getClass().toString(), e);
-      }
+      }*/
       return null;
     }
   }

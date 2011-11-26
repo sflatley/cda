@@ -12,14 +12,17 @@
 
 
 		<!--  pentaho dependencies -->
-		<dependency org="pentaho" name="pentaho-bi-platform-scheduler" rev="${dependency.bi-platform.revision}" transitive="false" changing="true"/>
+		<dependency org="pentaho" name="pentaho-platform-scheduler" rev="${dependency.bi-platform.revision}" transitive="false" changing="true"/>
+
 		<!--  internal dependencies -->
 		<dependency org="pentaho-reporting-engine" name="pentaho-reporting-engine-classic-core-platform-plugin"
-			rev="${dependency.bi-platform.revision}" changing="true">
+			rev="${dependency.pentaho-reporting.revision}" changing="true">
 		</dependency>
-		<dependency org="pentaho" name="pentaho-bi-platform-plugin-services"
+
+		<dependency org="pentaho" name="pentaho-platform-extensions"
 			rev="${dependency.bi-platform.revision}" changing="true"/>
-		<dependency org="pentaho" name="pentaho-bi-platform-plugin-actions"
+
+		<dependency org="pentaho" name="pentaho-platform-core"
 			rev="${dependency.bi-platform.revision}" changing="true"/>
 		<exclude module="ehcache"/>  <!-- Comment this for CDA with 3.6.0 dependencies -->
 
